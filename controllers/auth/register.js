@@ -3,16 +3,20 @@ const { requestError } = require("../../helpers");
 const bcrypt = require("bcryptjs");
 
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { email, subscription, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
-    throw requestError(409, "Email already exist");
+    throw requestError(409, "Email is use");
   }
   const hashPassword = await bcrypt.hash(password, 10);
-  const result = await User.create({ name, email, password: hashPassword });
+  const result = await User.create({
+    email,
+    subscription,
+    password: hashPassword,
+  });
   res.status(201).json({
-    name: result.name,
     email: result.email,
+    subscription: result.subscription,
   });
 };
 

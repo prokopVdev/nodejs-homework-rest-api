@@ -3,10 +3,6 @@ const Joi = require("joi");
 
 const userSchema = Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       required: true,
@@ -17,12 +13,20 @@ const userSchema = Schema(
       required: true,
       minlength: 6,
     },
+    subscription: {
+      type: String,
+      enum: ["starter", "pro", "business"],
+      default: "starter",
+    },
+    token: {
+      type: String,
+      default: null,
+    },
   },
   { versionKey: false, timeStamps: true }
 );
 
 const registerSchema = Joi.object({
-  name: Joi.string().required(),
   email: Joi.string().required(),
   password: Joi.string().required(),
 });
