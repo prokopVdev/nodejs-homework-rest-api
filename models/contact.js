@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-const { boolean } = require("joi");
+const { handleMongooseSchemaError } = require("../helpers");
 
 const contactSchema = Schema(
   {
@@ -10,6 +10,7 @@ const contactSchema = Schema(
     },
     email: {
       type: String,
+      unique: true,
     },
     phone: {
       type: String,
@@ -18,9 +19,17 @@ const contactSchema = Schema(
       type: Boolean,
       default: false,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
   },
+
   { versionKey: false, timestamps: true }
 );
+
+contactSchema.post("save", handleMongooseSchemaError);
 
 const addSchema = Joi.object({
   name: Joi.string().required(),
